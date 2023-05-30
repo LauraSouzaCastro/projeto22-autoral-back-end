@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  image       String        @db.Text
+  email       String        @unique @db.VarChar(255)
+  password    String        @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Session     Session[]
+  Transaction Transaction[]
+  Appointment Appointment[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  color       String        @db.VarChar(255)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Transaction Transaction[]
+}
+
+model Transaction {
+  id         Int             @id @default(autoincrement())
+  value      Decimal         @db.Decimal(47, 2)
+  type       TransactionType
+  date       DateTime        @db.Timestamptz()
+  userId     Int
+  User       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId Int
+  Category   Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+}
+
+enum TransactionType {
+  INPUT
+  OUTPUT
+}
+
+model Appointment {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  value        Decimal        @db.Decimal(47, 2)
+  date         DateTime       @db.Timestamptz()
+  userId       Int
+  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Notification Notification[]
+}
+
+model Notification {
+  id            Int         @id @default(autoincrement())
+  appointmentId Int
+  Appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
