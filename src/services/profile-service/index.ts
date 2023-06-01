@@ -3,7 +3,7 @@ import profileRepository from '@/repositories/profile-repository';
 import { notFoundError } from '@/errors';
 
 export async function updateUser({ userId, name, image }): Promise<User> {
-    const user = profileRepository.find({ id: userId });
+    const user = await profileRepository.find({ id: userId });
     if(!user) throw notFoundError();
     
     return profileRepository.update({ id: userId, name, image });

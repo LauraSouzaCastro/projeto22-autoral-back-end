@@ -11,8 +11,6 @@ export async function createUser(params: Partial<User> = {}): Promise<User> {
     data: {
       email: params.email || faker.internet.email(),
       password: hashedPassword,
-      image: params.image || 'https://avatars.githubusercontent.com/u/115507473?v=4',
-      name: params.name || 'Laura',
     },
   });
 }

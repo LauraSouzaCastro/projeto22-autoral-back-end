@@ -5,6 +5,7 @@ import { init } from '@/app';
 import { prisma } from '@/config';
 import authenticationService from '@/services/authentication-service';
 import { invalidCredentialsError } from '@/errors/invalid-credentials-error';
+import { notFoundError } from '@/errors';
 
 beforeAll(async () => {
   await init();
@@ -72,5 +73,36 @@ describe('signIn', () => {
       });
       expect(session).toBeDefined();
     });
+  });
+});
+
+describe('findByUserId', () => {
+  const generateParams = () => ({
+    email: faker.internet.email(),
+    password: faker.internet.password(6),
+  });
+
+  describe('when email and password are valid', () => {
+    it('should throw NotFound Error if there is no token for given user', async () => {
+      const params = generateParams();
+      const user = await createUser(params);
+
+      try {
+        await authenticationService.findByUserId(user.id);
+        fail('should throw NotFoundError');
+      } catch (error) {
+        expect(error).toEqual(notFoundError());
+      }
+    });
+  });
+
+  it('should return a user token array', async () => {
+    const params = generateParams();
+    const user = await createUser(params);
+
+    await authenticationService.signIn(params);
+    const sessions = await authenticationService.findByUserId(user.id);
+
+    expect(sessions).toBeDefined();
   });
 });
