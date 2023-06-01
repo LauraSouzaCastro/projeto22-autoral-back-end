@@ -2,13 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import profileService from '@/services/profile-service';
 import { JwtPayload } from 'jsonwebtoken';
-import multer from 'multer';
 import { badRequestError } from '@/errors/bad-request-error';
 
-export async function profilePost(req: Request, res: Response, next: NextFunction) {
+export async function imagePut(req: Request, res: Response, next: NextFunction) {
     try {
         const { userId } = req as JwtPayload;
-        const { name } = req.body;
         try{
             req.file.filename;
         } catch (error) {
@@ -16,9 +14,22 @@ export async function profilePost(req: Request, res: Response, next: NextFunctio
         }
         const image = req.file.filename;
 
-        const result = await profileService.updateUser({ userId, name, image });
+        const result = await profileService.updateUserImage({ userId, image });
 
-        return res.status(httpStatus.OK).send({ name: result.name, image: result.image });
+        return res.status(httpStatus.OK).send({ image: result.image });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function namePut(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { userId } = req as JwtPayload;
+        const { name } = req.body;
+
+        const result = await profileService.updateUserName({ userId, name });
+
+        return res.status(httpStatus.OK).send({ name: result.name });
     } catch (error) {
         next(error);
     }
