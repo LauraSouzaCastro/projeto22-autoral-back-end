@@ -37,8 +37,6 @@ describe('POST /users', () => {
     const generateValidBody = () => ({
       email: faker.internet.email(),
       password: faker.internet.password(6),
-      image:'https://avatars.githubusercontent.com/u/115507473?v=4',
-      name: 'Laura',
     });
 
     it('should respond with status 409 when there is an user with given email', async () => {
