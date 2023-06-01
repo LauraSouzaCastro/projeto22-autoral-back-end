@@ -9,21 +9,32 @@ async function find({ id }) {
     });
 }
 
-async function update({ id, name, image }): Promise<User>{
+async function updateImage({ id, image }): Promise<User>{
+    return prisma.user.update({
+        where: {
+            id
+        },
+        data: {
+            image,
+        },
+    });
+}
+
+async function updateName({ id, name }): Promise<User>{
     return prisma.user.update({
         where: {
             id
         },
         data: {
             name,
-            image,
         },
     });
 }
 
 const profileRepository = {
     find,
-    update,
+    updateImage,
+    updateName,
 };
 
 export default profileRepository;
