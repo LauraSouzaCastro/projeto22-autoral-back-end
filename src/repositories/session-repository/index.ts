@@ -7,8 +7,17 @@ async function create(data: Prisma.SessionUncheckedCreateInput) {
   });
 }
 
+async function find(userId: number) {
+  return prisma.session.findMany({
+    where: {
+      userId,
+    },
+  });
+}
+
 const sessionRepository = {
   create,
+  find
 };
 
 export default sessionRepository;

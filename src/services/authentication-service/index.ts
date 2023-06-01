@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { invalidCredentialsError } from '@/errors/invalid-credentials-error';
@@ -21,6 +21,13 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
   };
 }
 
+async function findByUserId(userId: number): Promise<Session[]> {
+
+  const tokens = await sessionRepository.find(userId);
+
+  return tokens;
+}
+
 async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
   const user = await userRepository.findByEmail(email, { id: true, email: true, password: true, name: true, image: true });
   if (!user) throw invalidCredentialsError();
@@ -28,7 +35,7 @@ async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
   return user;
 }
 
-async function createSession(userId: number): Promise<string> {
+export async function createSession(userId: number): Promise<string> {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET);
   await sessionRepository.create({
     token,
@@ -45,7 +52,7 @@ async function validatePasswordOrFail(password: string, userPassword: string): P
 
 export type SignInParams = Pick<User, 'email' | 'password'>;
 
-type SignInResult = {
+export type SignInResult = {
   user: Pick<User, 'id' | 'email' | 'name' | 'image'>;
   token: string;
 };
@@ -54,6 +61,7 @@ type GetUserOrFailResult = Pick<User, 'id' | 'email' | 'password' | 'name' | 'im
 
 const authenticationService = {
   signIn,
+  findByUserId
 };
 
 export default authenticationService;
