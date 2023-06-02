@@ -11,12 +11,11 @@ beforeAll(async () => {
   await cleanDb();
 });
 
-describe('updateUser', () => {
+describe('updateUserImage', () => {
   it('should throw notFoundError if there is no user with given userid', async () => {
     try {
-      await profileService.updateUser({
+      await profileService.updateUserImage({
         userId: faker.number.int(3),
-        name: faker.person.firstName(),
         image: faker.internet.url(),
       });
       fail('should throw notFoundError');
@@ -31,9 +30,8 @@ describe('updateUser', () => {
       password: faker.internet.password(6),
     });
 
-    const userUpdate = await profileService.updateUser({
+    const userUpdate = await profileService.updateUserImage({
         userId: user.id,
-        name: faker.person.firstName(),
         image: faker.internet.url(),
     });
 
@@ -45,8 +43,45 @@ describe('updateUser', () => {
     expect(userUpdate).toEqual(
       expect.objectContaining({
         id: dbUser.id,
-        name: dbUser.name,
         image: dbUser.image,
+      }),
+    );
+  });
+});
+
+describe('updateUserName', () => {
+  it('should throw notFoundError if there is no user with given userid', async () => {
+    try {
+      await profileService.updateUserName({
+        userId: faker.number.int(3),
+        name: faker.person.firstName(),
+      });
+      fail('should throw notFoundError');
+    } catch (error) {
+      expect(error).toEqual(notFoundError());
+    }
+  });
+
+  it('should update user when given userId is valid', async () => {
+    const user = await userService.createUser({
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
+
+    const userUpdate = await profileService.updateUserName({
+        userId: user.id,
+        name: faker.person.firstName(),
+    });
+
+    const dbUser = await prisma.user.findUnique({
+        where: {
+          id: user.id,
+        },
+    });
+    expect(userUpdate).toEqual(
+      expect.objectContaining({
+        id: dbUser.id,
+        name: dbUser.name,
       }),
     );
   });

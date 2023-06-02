@@ -38,11 +38,6 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'ForBiddenError') {
-    return res.status(httpStatus.FORBIDDEN).send({
-      message: err.message,
-    });
-  }
 
   res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
     error: 'InternalServerError',
