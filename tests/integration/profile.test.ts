@@ -16,9 +16,9 @@ beforeAll(async () => {
 
 const server = supertest(app);
 
-describe('PUT /profile', () => {
+describe('PUT /profile/image', () => {
     it('should respond with status 401 if no token is given', async () => {
-        const response = await server.put('/profile');
+        const response = await server.put('/profile/image');
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -26,7 +26,7 @@ describe('PUT /profile', () => {
     it('should respond with status 401 if given token is not valid', async () => {
         const token = faker.lorem.word();
 
-        const response = await server.put('/profile').set('Authorization', `Bearer ${token}`);
+        const response = await server.put('/profile/image').set('Authorization', `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -35,7 +35,7 @@ describe('PUT /profile', () => {
         const userWithoutSession = await createUser();
         const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-        const response = await server.put('/profile').set('Authorization', `Bearer ${token}`);
+        const response = await server.put('/profile/image').set('Authorization', `Bearer ${token}`);
 
         expect(response.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -51,10 +51,9 @@ describe('PUT /profile', () => {
                 },
             });
             const response = await server
-                .put('/profile')
+                .put('/profile/image')
                 .set('Authorization', `Bearer ${token}`)
                 .set('Content-Type', 'multipart/form-data')
-                .field('name', faker.person.firstName())
                 .attach('image', path.resolve(__dirname, '..', '..', 'uploads/f8c6968a3e86-Hubble-Ultra-Deep-Field-640x640.jpg'));
 
 
@@ -66,35 +65,21 @@ describe('PUT /profile', () => {
             const token = await generateValidToken(user);
 
             const response = await server
-                .put('/profile')
+                .put('/profile/image')
                 .set('Authorization', `Bearer ${token}`)
                 .set('Content-Type', 'multipart/form-data')
-                .field('name', faker.person.firstName())
                 .attach('image', path.resolve(__dirname, '..', '..', 'uploads/f8c6968a3e86-Hubble-Ultra-Deep-Field-640x640.jpg'));
 
 
             expect(response.status).toEqual(httpStatus.OK);
         });
 
-        it('should respond with status 400 with invalid name', async () => {
-            const user = await createUser();
-            const token = await generateValidToken(user);
-
-            const response = await server
-                .put('/profile')
-                .set('Authorization', `Bearer ${token}`)
-                .set('Content-Type', 'multipart/form-data')
-                .field('name', '')
-                .attach('image', path.resolve(__dirname, '..', '..', 'uploads/f8c6968a3e86-Hubble-Ultra-Deep-Field-640x640.jpg'));
-
-            expect(response.status).toEqual(httpStatus.BAD_REQUEST);
-        });
         it('should respond with status 400 with a invalid image', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
             const response = await server
-                .put('/profile')
+                .put('/profile/image')
                 .set('Authorization', `Bearer ${token}`)
                 .set('Content-Type', 'multipart/form-data')
                 .field('name', faker.person.firstName())
@@ -106,3 +91,72 @@ describe('PUT /profile', () => {
     });
 });
 
+describe('PUT /profile/name', () => {
+    it('should respond with status 401 if no token is given', async () => {
+        const response = await server.put('/profile/name');
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if given token is not valid', async () => {
+        const token = faker.lorem.word();
+
+        const response = await server.put('/profile/name').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if there is no session for given token', async () => {
+        const userWithoutSession = await createUser();
+        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+
+        const response = await server.put('/profile/name').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when token is valid', () => {
+        it('should respond with status 404 when ivalid user ', async () => {
+            const user = await createUser();
+            const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET);
+            await prisma.session.create({
+                data: {
+                    token: token,
+                    userId: user.id,
+                },
+            });
+            const response = await server
+                .put('/profile/name')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: faker.person.firstName()});
+
+
+            expect(response.status).toEqual(httpStatus.NOT_FOUND);
+        });
+
+        it('should respond with status 200 with a valid body', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const response = await server
+                .put('/profile/name')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: faker.person.firstName()});
+
+
+            expect(response.status).toEqual(httpStatus.OK);
+        });
+
+        it('should respond with status 400 with invalid name', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const response = await server
+                .put('/profile/name')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ name: ''});
+
+            expect(response.status).toEqual(httpStatus.BAD_REQUEST);
+        });
+    });
+});
