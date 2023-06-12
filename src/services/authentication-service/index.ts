@@ -6,7 +6,6 @@ import { exclude } from '@/utils/prisma-utils';
 import userRepository from '@/repositories/user-repository';
 import sessionRepository from '@/repositories/session-repository';
 import { notFoundError } from '@/errors';
-import profileRepository from '@/repositories/profile-repository';
 
 async function signIn(params: SignInParams): Promise<SignInResult> {
   const { email, password } = params;
