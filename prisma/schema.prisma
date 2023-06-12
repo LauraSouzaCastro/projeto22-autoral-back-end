@@ -11,6 +11,8 @@ model Category {
   id          Int           @id @default(autoincrement())
   name        String        @db.VarChar(255)
   color       String        @db.VarChar(255)
+  userId      Int
+  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Transaction Transaction[]
@@ -34,23 +36,23 @@ model Session {
 }
 
 model Transaction {
-  id           Int             @id @default(autoincrement())
-  value        Decimal         @db.Decimal(47, 2)
-  type         TransactionType
-  date         DateTime        @db.Timestamptz(6)
-  done         Boolean         @default(true)
-  userId       Int
-  categoryId   Int
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  Category     Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  User         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Notification Notification[]
+  id              Int             @id @default(autoincrement())
+  value           Decimal         @db.Decimal(47, 2)
+  typeTransaction TransactionType
+  dateTransaction DateTime        @db.Timestamp(3)
+  done            Boolean
+  userId          Int
+  categoryId      Int
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  Category        Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  User            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Notification    Notification[]
 }
 
 model User {
   id          Int           @id @default(autoincrement())
-  name        String?        @db.VarChar(255)
+  name        String?       @db.VarChar(255)
   image       String?
   email       String        @unique @db.VarChar(255)
   password    String        @db.VarChar(255)
@@ -58,6 +60,7 @@ model User {
   updatedAt   DateTime      @updatedAt
   Session     Session[]
   Transaction Transaction[]
+  Category    Category[]
 }
 
 enum TransactionType {

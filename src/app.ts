@@ -4,7 +4,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 
 import { loadEnv, connectDb, disconnectDB } from '@/config';
-import { authenticationRouter, usersRouter, profileRouter } from './routers';
+import { authenticationRouter, usersRouter, profileRouter, transactionsRouter, categoriesRouter } from './routers';
 import { handleApplicationErrors } from './middlewares';
 import path from 'path';
 
@@ -19,6 +19,8 @@ app
   .use('/auth', authenticationRouter)
   .use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')))
   .use('/profile', profileRouter)
+  .use('/transactions', transactionsRouter)
+  .use('/categories', categoriesRouter)
   .use(handleApplicationErrors);
 
 
