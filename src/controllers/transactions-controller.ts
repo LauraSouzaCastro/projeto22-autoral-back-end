@@ -40,3 +40,15 @@ export async function deleteTransactionById(req: Request, res: Response, next: N
         next(error);
     }
 }
+
+export async function getDataGrafic(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { userId } = req as JwtPayload;
+
+        const result = await transactionsService.dataGraficByUserId(userId);
+
+        return res.status(httpStatus.OK).send(result);
+    } catch (error) {
+        next(error);
+    }
+}
