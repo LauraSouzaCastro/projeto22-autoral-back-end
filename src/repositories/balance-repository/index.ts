@@ -1,34 +1,75 @@
 import { prisma } from "@/config";
-import { TransactionType } from "@prisma/client";
+import { Transaction } from "@prisma/client";
 
-async function existTransactionsByUserId(userId: number, typeTransaction: TransactionType ) {
-    return prisma.transaction.findMany({
+async function findBalanceByUserId(userId: number) {
+    return prisma.balance.findFirst({
         where: {
             userId,
-            typeTransaction,
-            done: true,
         },
-      });
+        orderBy: {
+            dateTransaction: 'desc'
+        }
+    });
 }
 
-async function findTransactionsByUserId(userId: number, typeTransaction: TransactionType ) {
-    return prisma.transaction.groupBy({
-        by: ['userId'],
+async function findBalancesByUserId(userId: number) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    return prisma.balance.findMany({
         where: {
             userId,
-            typeTransaction,
-            done: true,
+            dateTransaction: { gte: thirtyDaysAgo },
         },
-        _sum: {
-          value: true
+        select: {
+            dateTransaction: true,
+            value: true,
         },
-      });
+        orderBy: {
+            dateTransaction: 'asc'
+        },
+    });
 }
 
+async function createBalanceByUserId(transaction: Transaction) {
+    const balance = await prisma.balance.findFirst({
+        where: {
+            userId: transaction.userId,
+            dateTransaction: { lte: transaction.dateTransaction }
+        },
+        orderBy: {
+            dateTransaction: 'desc'
+        }
+    });
+
+    let value = balance ? Number(balance.value) : 0
+    if (transaction.typeTransaction === 'INPUT') value += Number(transaction.value)
+    if (transaction.typeTransaction === 'OUTPUT') value -= Number(transaction.value)
+
+    await prisma.balance.create({
+        data: {
+            userId: transaction.userId,
+            dateTransaction: transaction.dateTransaction,
+            value,
+            transactionId: transaction.id,
+        },
+    });
+
+    await prisma.balance.updateMany({
+        where: {
+            userId: transaction.userId,
+            dateTransaction: { gt: transaction.dateTransaction }
+        },
+        data: {
+            value: { increment: transaction.typeTransaction === 'INPUT' ? Number(transaction.value) : -Number(transaction.value) }
+        }
+    })
+}
 
 const balanceRepository = {
-    findTransactionsByUserId,
-    existTransactionsByUserId,
+    findBalanceByUserId,
+    createBalanceByUserId,
+    findBalancesByUserId,
 };
 
 export default balanceRepository;

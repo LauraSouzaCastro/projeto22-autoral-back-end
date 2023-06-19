@@ -20,11 +20,11 @@ async function findByUserId(userId: number): Promise<Category[]> {
 async function createOrUpdate(id: number, userId: number, name: string, color: string): Promise<Category> {
     return prisma.category.upsert({
         where: {
-          id,
+            id,
         },
         create: { userId, name, color },
         update: { color },
-      });
+    });
 }
 
 const categoryRepository = {
