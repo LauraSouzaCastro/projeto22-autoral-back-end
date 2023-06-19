@@ -1,14 +1,6 @@
 import { prisma } from "@/config";
 import { Category } from "@prisma/client";
 
-async function find(id: number): Promise<Category> {
-    return prisma.category.findUnique({
-        where: {
-            id
-        }
-    });
-}
-
 async function findByUserId(userId: number): Promise<Category[]> {
     return prisma.category.findMany({
         where: {
@@ -28,7 +20,6 @@ async function createOrUpdate(id: number, userId: number, name: string, color: s
 }
 
 const categoryRepository = {
-    find,
     findByUserId,
     createOrUpdate,
 };
