@@ -4,7 +4,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 
 import { loadEnv, connectDb, disconnectDB } from '@/config';
-import { authenticationRouter, usersRouter, profileRouter, transactionsRouter, categoriesRouter, balanceRouter } from './routers';
+import { authenticationRouter, usersRouter, profileRouter, transactionsRouter, categoriesRouter, balanceRouter, historicRouter } from './routers';
 import { handleApplicationErrors } from './middlewares';
 import path from 'path';
 
@@ -22,6 +22,7 @@ app
   .use('/transactions', transactionsRouter)
   .use('/categories', categoriesRouter)
   .use('/balance', balanceRouter)
+  .use('/historic', historicRouter)
   .use(handleApplicationErrors);
 
 

@@ -1,7 +1,7 @@
 import balanceRepository from '@/repositories/balance-repository';
 
 export async function balanceCalcByUserId(userId: number) {
-    let inputsSum, outputsSum;
+    let inputsSum: any, outputsSum: any;
     const inputs = await balanceRepository.existTransactionsByUserId(userId, 'INPUT');
     
     if(inputs.length) {
