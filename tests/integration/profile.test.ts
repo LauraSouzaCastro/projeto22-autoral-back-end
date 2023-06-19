@@ -6,7 +6,6 @@ import { cleanDb, generateValidToken } from '../helpers';
 import app, { init } from '@/app';
 import * as jwt from 'jsonwebtoken';
 import { prisma } from '@/config';
-import FormData from 'form-data';
 import path from 'path';
 
 beforeAll(async () => {
