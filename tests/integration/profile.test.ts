@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { createUser } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
 import app, { init } from '../../src/app';
-import * as jwt from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { prisma } from '../../src/config';
 import path from 'path';
 
@@ -32,7 +32,7 @@ describe('PUT /profile/image', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.put('/profile/image').set('Authorization', `Bearer ${token}`);
 
@@ -42,7 +42,7 @@ describe('PUT /profile/image', () => {
     describe('when token is valid', () => {
         it('should respond with status 404 when ivalid user ', async () => {
             const user = await createUser();
-            const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET);
+            const token = sign({ userId: 1 }, process.env.JWT_SECRET);
             await prisma.session.create({
                 data: {
                     token: token,
@@ -107,7 +107,7 @@ describe('PUT /profile/name', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.put('/profile/name').set('Authorization', `Bearer ${token}`);
 
@@ -117,7 +117,7 @@ describe('PUT /profile/name', () => {
     describe('when token is valid', () => {
         it('should respond with status 404 when ivalid user ', async () => {
             const user = await createUser();
-            const token = jwt.sign({ userId: 1 }, process.env.JWT_SECRET);
+            const token = sign({ userId: 1 }, process.env.JWT_SECRET);
             await prisma.session.create({
                 data: {
                     token: token,

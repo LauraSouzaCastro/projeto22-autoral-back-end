@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { createUser } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
 import app, { init } from '../../src/app';
-import * as jwt from 'jsonwebtoken';
+import { sign }  from 'jsonwebtoken';
 import { prisma } from '../../src/config';
 
 beforeAll(async () => {
@@ -108,7 +108,7 @@ describe('GET /auth/sessions', () => {
 
   it('should respond with status 401 if there is no session for given token', async () => {
     const userWithoutSession = await createUser();
-    const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+    const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
     const response = await server.get('/auth/sessions').set('Authorization', `Bearer ${token}`);
 
@@ -127,7 +127,7 @@ describe('GET /auth/sessions', () => {
 
     it('should respond with status 200 with a valid token', async () => {
       const user = await createUser();
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+      const token = sign({ userId: user.id }, process.env.JWT_SECRET);
       await prisma.session.create({
         data: {
           token: token,

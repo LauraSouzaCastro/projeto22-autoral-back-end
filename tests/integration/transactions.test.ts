@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { createTransaction, createUser } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
 import app, { init } from '../../src/app';
-import * as jwt from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 
 beforeAll(async () => {
     await init();
@@ -30,7 +30,7 @@ describe('POST /transactions/', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.post('/transactions').set('Authorization', `Bearer ${token}`);
 
@@ -200,7 +200,7 @@ describe('GET /transactions/', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.get('/transactions').set('Authorization', `Bearer ${token}`);
 
@@ -263,7 +263,7 @@ describe('DELETE /transactions/:transactionId', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.delete('/transactions/1').set('Authorization', `Bearer ${token}`);
 
@@ -330,7 +330,7 @@ describe('GET /transactions/data', () => {
 
     it('should respond with status 401 if there is no session for given token', async () => {
         const userWithoutSession = await createUser();
-        const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
         const response = await server.get('/transactions/data').set('Authorization', `Bearer ${token}`);
 
