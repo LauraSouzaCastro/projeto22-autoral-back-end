@@ -41,11 +41,36 @@ export async function deleteTransactionById(req: Request, res: Response, next: N
     }
 }
 
+export async function updateTransactionById(req: Request, res: Response, next: NextFunction) {
+    try {
+        const { userId } = req as JwtPayload;
+        const { transactionId } = req.params;
+        
+        await transactionsService.updateTransactionById(userId, Number(transactionId));
+
+        return res.sendStatus(httpStatus.OK);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export async function getDataGrafic(req: Request, res: Response, next: NextFunction) {
     try {
         const { userId } = req as JwtPayload;
 
         const result = await transactionsService.dataGraficByUserId(userId);
+
+        return res.status(httpStatus.OK).send(result);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getNotificationsByUserId(req: Request, res: Response, next: NextFunction) {
+    const { userId } = req as JwtPayload;
+
+    try {
+        const result = await transactionsService.notificationsByUserId(userId);
 
         return res.status(httpStatus.OK).send(result);
     } catch (error) {

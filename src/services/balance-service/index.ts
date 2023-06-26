@@ -4,7 +4,7 @@ export async function balanceCalcByUserId(userId: number) {
     const balance = await balanceRepository.findBalanceByUserId(userId);
     
     if(!balance) return { value: 0.00 };
-
+    console.log(balance)
     return { value: balance.value.toFixed(2) };
 }
 
