@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { createUser } from '../factories';
 import { cleanDb } from '../helpers';
-import { init } from '@/app';
-import { prisma } from '@/config';
-import authenticationService from '@/services/authentication-service';
-import { invalidCredentialsError } from '@/errors/invalid-credentials-error';
-import { notFoundError } from '@/errors';
+import { init } from '../../src/app';
+import { prisma } from '../../src/config';
+import authenticationService from '../../src/services/authentication-service';
+import { invalidCredentialsError } from '../../src/errors/invalid-credentials-error';
+import { notFoundError } from '../../src/errors';
 
 beforeAll(async () => {
   await init();

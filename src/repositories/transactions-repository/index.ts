@@ -1,5 +1,5 @@
-import { prisma } from "@/config";
-import { Transaction } from "@prisma/client";
+import { prisma } from "../../config";
+import { Transaction } from ".prisma/client";
 import balanceRepository from "../balance-repository";
 
 export type TransactionParams = Pick<Transaction, 'value' | 'typeTransaction' | 'dateTransaction' | 'done' | 'userId' | 'categoryId'>;

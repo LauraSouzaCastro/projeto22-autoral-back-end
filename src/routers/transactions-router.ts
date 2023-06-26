@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { transationsSchema } from '@/schemas';
-import { authenticateToken, validateBody } from '@/middlewares';
-import { transactionsPost, getHistoricByUserId, deleteTransactionById, getDataGrafic } from '@/controllers';
+import { transationsSchema } from '../schemas';
+import { authenticateToken, validateBody } from '../middlewares';
+import { transactionsPost, getHistoricByUserId, deleteTransactionById, getDataGrafic } from '../controllers';
 
 const transactionsRouter = Router();
 

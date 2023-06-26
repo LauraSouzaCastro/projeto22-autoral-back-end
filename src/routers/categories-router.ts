@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { authenticateToken } from '@/middlewares';
-import { getCategoriesByUserId } from '@/controllers';
+import { authenticateToken } from '../middlewares';
+import { getCategoriesByUserId } from '../controllers';
 
 const categoriesRouter = Router();
 

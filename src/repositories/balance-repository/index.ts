@@ -1,5 +1,5 @@
-import { prisma } from "@/config";
-import { Transaction } from "@prisma/client";
+import { prisma } from "../../config";
+import { Transaction } from ".prisma/client";
 
 async function findBalanceByUserId(userId: number) {
     return prisma.balance.findFirst({

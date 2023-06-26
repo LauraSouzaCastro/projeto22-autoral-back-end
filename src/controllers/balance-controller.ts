@@ -1,4 +1,4 @@
-import balanceService from '@/services/balance-service';
+import balanceService from '../services/balance-service';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';

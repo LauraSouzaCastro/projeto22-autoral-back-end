@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { cleanDb } from '../helpers';
-import userService from '@/services/users-service';
-import { prisma } from '@/config';
-import { init } from '@/app';
-import profileService from '@/services/profile-service';
-import { notFoundError } from '@/errors';
+import userService from '../../src/services/users-service';
+import { prisma } from '../../src/config';
+import { init } from '../../src/app';
+import profileService from '../../src/services/profile-service';
+import { notFoundError } from '../../src/errors';
 
 beforeAll(async () => {
   await init();

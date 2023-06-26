@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import authenticationService, { SignInParams } from '@/services/authentication-service';
+import authenticationService, { SignInParams } from '../services/authentication-service';
 import { JwtPayload } from 'jsonwebtoken';
 
 export async function singInPost(req: Request, res: Response, next: NextFunction) {
