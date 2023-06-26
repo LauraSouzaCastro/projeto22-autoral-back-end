@@ -63,11 +63,29 @@ async function dataGraficByUserId(userId: number) {
     return array.filter(a => a);
 }
 
+async function updateTransactionById(userId: number, transactionId: number) {
+    if (!transactionId) throw badRequestError();
+
+    const transaction = await transactionsRepository.findTransaction(userId, transactionId);
+    if (!transaction) throw notFoundError();
+
+    await transactionsRepository.updateTransaction(transaction);
+}
+
+async function notificationsByUserId(userId: number) {
+    const transactions = await transactionsRepository.findNotificationsByUserId(userId);
+    if (!transactions.length) return [];
+
+    return transactions;
+}
+
 const transactionsService = {
     postTransactions,
     deleteTransactionById,
     historicByUserId,
     dataGraficByUserId,
+    notificationsByUserId,
+    updateTransactionById
 };
 
 export default transactionsService;

@@ -95,12 +95,54 @@ async function findTransactionsByCategory(userId: number) {
     });
 }
 
+async function findNotificationsByUserId(userId: number) {
+    const today = new Date();
+    today.setDate(today.getDate());
+
+    return prisma.transaction.findMany({
+        where: {
+            userId,
+            done: false,
+            dateTransaction: { lte: today },
+        },
+        select: {
+            id: true,
+            dateTransaction: true,
+            value: true,
+            Category: {
+                select: {
+                    name: true,
+                }
+            },
+        },
+        orderBy: {
+            dateTransaction: 'desc',
+        },
+    });
+}
+
+async function updateTransaction(transaction: Transaction) {
+    await prisma.transaction.update({
+        where: {
+            id: transaction.id,
+        },
+        data: {
+            done: true,
+        }
+    });
+
+    await balanceRepository.createBalanceByUserId(transaction);
+    
+}
+
 const transactionsRepository = {
     create,
     findTransactionsByUserId,
     findTransaction,
     deleteTransaction,
     findTransactionsByCategory,
+    findNotificationsByUserId,
+    updateTransaction,
 };
 
 export default transactionsRepository;
