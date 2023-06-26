@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import profileService from '@/services/profile-service';
+import profileService from '../services/profile-service';
 import { JwtPayload } from 'jsonwebtoken';
-import { badRequestError } from '@/errors/bad-request-error';
+import { badRequestError } from '../errors/bad-request-error';
 
 export async function imagePut(req: Request, res: Response, next: NextFunction) {
     try {

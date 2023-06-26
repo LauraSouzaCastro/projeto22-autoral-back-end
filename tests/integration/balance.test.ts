@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createTransaction, createUser } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
-import app, { init } from '@/app';
+import app, { init } from '../../src/app';
 import * as jwt from 'jsonwebtoken';
 
 beforeAll(async () => {

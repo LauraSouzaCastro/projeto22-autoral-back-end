@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { prisma } from '@/config';
-import { TransactionType } from '@prisma/client';
+import { prisma } from '../../src/config';
+import { TransactionType } from '.prisma/client';
 
 export async function createTransaction(userId: number, typeTransaction: TransactionType) {
     const category = await prisma.category.create({

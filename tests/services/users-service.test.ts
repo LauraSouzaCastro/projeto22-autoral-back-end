@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker';
 import bcrypt from 'bcrypt';
 import { createUser as createUserSeed } from '../factories';
 import { cleanDb } from '../helpers';
-import userService from '@/services/users-service';
-import { prisma } from '@/config';
-import { init } from '@/app';
-import { duplicatedEmailError } from '@/errors/duplicated-email-error';
+import userService from '../../src/services/users-service';
+import { prisma } from '../../src/config';
+import { init } from '../../src/app';
+import { duplicatedEmailError } from '../../src/errors/duplicated-email-error';
 
 beforeAll(async () => {
   await init();

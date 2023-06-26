@@ -1,6 +1,6 @@
-import { User } from '@prisma/client';
-import profileRepository from '@/repositories/profile-repository';
-import { notFoundError } from '@/errors';
+import { User } from '.prisma/client';
+import profileRepository from '../../repositories/profile-repository';
+import { notFoundError } from '../../errors';
 
 export async function updateUserImage({ userId, image }): Promise<User> {
     const user = await profileRepository.find({ id: userId });

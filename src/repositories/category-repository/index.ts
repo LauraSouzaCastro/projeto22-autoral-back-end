@@ -1,5 +1,5 @@
-import { prisma } from "@/config";
-import { Category } from "@prisma/client";
+import { prisma } from "../../config";
+import { Category } from ".prisma/client";
 
 async function findByUserId(userId: number): Promise<Category[]> {
     return prisma.category.findMany({

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { updateProfileSchema } from '@/schemas';
+import { updateProfileSchema } from '../../src/schemas';
 
 describe('updateProfileSchema', () => {
     const generateValidInput = () => ({

@@ -1,4 +1,4 @@
-import balanceRepository from '@/repositories/balance-repository';
+import balanceRepository from '../../repositories/balance-repository';
 
 export async function balanceCalcByUserId(userId: number) {
     const balance = await balanceRepository.findBalanceByUserId(userId);

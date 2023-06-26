@@ -3,9 +3,9 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createUser } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
-import app, { init } from '@/app';
+import app, { init } from '../../src/app';
 import * as jwt from 'jsonwebtoken';
-import { prisma } from '@/config';
+import { prisma } from '../../src/config';
 import path from 'path';
 
 beforeAll(async () => {

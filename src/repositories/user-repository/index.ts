@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/config';
+import { Prisma } from '.prisma/client';
+import { prisma } from '../../config';
 
 async function findByEmail(email: string, select?: Prisma.UserSelect) {
   

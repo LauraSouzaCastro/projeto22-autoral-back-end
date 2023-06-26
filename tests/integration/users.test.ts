@@ -3,9 +3,9 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createUser } from '../factories';
 import { cleanDb } from '../helpers';
-import { duplicatedEmailError } from '@/errors/duplicated-email-error';
-import { prisma } from '@/config';
-import app, { init } from '@/app';
+import { duplicatedEmailError } from '../../src/errors/duplicated-email-error';
+import { prisma } from '../../src/config';
+import app, { init } from '../../src/app';
 
 beforeAll(async () => {
   await init();

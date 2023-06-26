@@ -1,8 +1,8 @@
-import categoryRepository from '@/repositories/category-repository';
-import transactionsRepository from '@/repositories/transactions-repository';
-import { notFoundError } from '@/errors';
-import { badRequestError } from '@/errors/bad-request-error';
-import balanceRepository from '@/repositories/balance-repository';
+import categoryRepository from '../../repositories/category-repository';
+import transactionsRepository from '../../repositories/transactions-repository';
+import { notFoundError } from '../../errors';
+import { badRequestError } from '../../errors/bad-request-error';
+import balanceRepository from '../../repositories/balance-repository';
 
 async function postTransactions({ userId, typeTransaction, value, categoryName, color, dateTransaction, done, categoryId }) {
     const category = await categoryRepository.createOrUpdate(categoryId, userId, categoryName, color);

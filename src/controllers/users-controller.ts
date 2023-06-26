@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import userService from '@/services/users-service';
+import userService from '../services/users-service';
 
 export async function usersPost(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body;

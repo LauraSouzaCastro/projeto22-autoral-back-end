@@ -1,4 +1,4 @@
-import categoriesService from '@/services/categories-service';
+import categoriesService from '../services/categories-service';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
