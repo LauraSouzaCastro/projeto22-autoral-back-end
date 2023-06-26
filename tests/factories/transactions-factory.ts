@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '../../node_modules/@faker-js/faker';
 import { prisma } from '../../src/config';
 import { TransactionType } from '.prisma/client';
 

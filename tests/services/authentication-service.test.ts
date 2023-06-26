@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '../../node_modules/@faker-js/faker';
 import { createUser } from '../factories';
 import { cleanDb } from '../helpers';
 import { init } from '../../src/app';
