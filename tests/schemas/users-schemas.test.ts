@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '../../node_modules/@faker-js/faker';
 import { createUserSchema } from '../../src/schemas';
 
 describe('createUserSchema', () => {

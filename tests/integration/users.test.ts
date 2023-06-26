@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '../../node_modules/@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createUser } from '../factories';
