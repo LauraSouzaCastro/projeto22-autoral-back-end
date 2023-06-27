@@ -43,7 +43,7 @@ describe('GET /categories/', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
-            await createTransaction(user.id, 'OUTPUT');
+            await createTransaction(user.id, true, 'OUTPUT');
 
             const response = await server
                 .get('/categories')

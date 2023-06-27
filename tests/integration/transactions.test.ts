@@ -226,7 +226,7 @@ describe('GET /transactions/', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
-            await createTransaction(user.id, 'OUTPUT');
+            await createTransaction(user.id, true, 'OUTPUT');
 
             const response = await server
                 .get('/transactions')
@@ -300,7 +300,7 @@ describe('DELETE /transactions/:transactionId', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
-            const transaction = await createTransaction(user.id, 'INPUT');
+            const transaction = await createTransaction(user.id, true, 'INPUT');
 
             const response = await server
                 .delete(`/transactions/${transaction.id}`)
@@ -356,7 +356,7 @@ describe('GET /transactions/data', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
-            await createTransaction(user.id, 'INPUT');
+            await createTransaction(user.id, true, 'INPUT');
 
             const response = await server
                 .get('/transactions/data')
@@ -384,6 +384,138 @@ describe('GET /transactions/data', () => {
                 name: expect.any(String),
                 type: expect.any(String),
             },]);
+        });
+    });
+});
+
+describe('GET /transactions/notifications', () => {
+    it('should respond with status 401 if no token is given', async () => {
+        const response = await server.get('/transactions/notifications');
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if given token is not valid', async () => {
+        const token = faker.lorem.word();
+
+        const response = await server.get('/transactions/notifications').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if there is no session for given token', async () => {
+        const userWithoutSession = await createUser();
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+
+        const response = await server.get('/transactions/notifications').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when token is valid', () => {
+
+        it('should respond with status 200 and empty array when there are no notifications', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            await createTransaction(user.id, true, 'OUTPUT');
+
+            const response = await server
+                .get('/transactions/notifications')
+                .set('Authorization', `Bearer ${token}`);
+
+
+            expect(response.status).toEqual(httpStatus.OK);
+            expect(response.body).toEqual([]);
+        });
+
+        it('should respond with status 200 and transactions array when there are notifications', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            await createTransaction(user.id, false, 'OUTPUT');
+
+            const response = await server
+                .get('/transactions/notifications')
+                .set('Authorization', `Bearer ${token}`);
+
+
+            expect(response.status).toEqual(httpStatus.OK);
+            expect(response.body).toEqual([{
+                Category: {
+                    name: expect.any(String),
+                },
+                dateTransaction: expect.any(String),
+                id: expect.any(Number),
+                value: expect.any(String),
+            }]);
+        });
+    });
+});
+
+describe('UPDATE /transactions/:transactionId', () => {
+    it('should respond with status 401 if no token is given', async () => {
+        const response = await server.put('/transactions/1');
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if given token is not valid', async () => {
+        const token = faker.lorem.word();
+
+        const response = await server.put('/transactions/1').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    it('should respond with status 401 if there is no session for given token', async () => {
+        const userWithoutSession = await createUser();
+        const token = sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
+
+        const response = await server.put('/transactions/1').set('Authorization', `Bearer ${token}`);
+
+        expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    });
+
+    describe('when token is valid', () => {
+
+        it('should respond with status 400 with invalid transactionId', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const response = await server
+                .put('/transactions/0')
+                .set('Authorization', `Bearer ${token}`);
+
+
+            expect(response.status).toEqual(httpStatus.BAD_REQUEST);
+        });
+
+        it('should respond with status 404 when there are no transactionId', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const response = await server
+                .put('/transactions/1')
+                .set('Authorization', `Bearer ${token}`);
+
+
+            expect(response.status).toEqual(httpStatus.NOT_FOUND);
+        });
+
+        it('should respond with status 200 when there are valid transactionsId', async () => {
+            const user = await createUser();
+            const token = await generateValidToken(user);
+
+            const transaction = await createTransaction(user.id, false, 'INPUT');
+
+            const response = await server
+                .put(`/transactions/${transaction.id}`)
+                .set('Authorization', `Bearer ${token}`);
+
+
+            expect(response.status).toEqual(httpStatus.OK);
+
         });
     });
 });

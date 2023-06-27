@@ -56,7 +56,7 @@ describe('GET /balance/', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
 
-            await createTransaction(user.id, 'INPUT');
+            await createTransaction(user.id, true, 'INPUT');
 
             const response = await server
                 .get('/balance')

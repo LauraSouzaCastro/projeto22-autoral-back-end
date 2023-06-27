@@ -2,7 +2,7 @@ import { faker } from '../../node_modules/@faker-js/faker';
 import { prisma } from '../../src/config';
 import { TransactionType } from '.prisma/client';
 
-export async function createTransaction(userId: number, typeTransaction: TransactionType) {
+export async function createTransaction(userId: number, done: boolean, typeTransaction: TransactionType) {
     const category = await prisma.category.create({
         data: {
             userId,
@@ -16,7 +16,7 @@ export async function createTransaction(userId: number, typeTransaction: Transac
             typeTransaction,
             value: 1,
             dateTransaction: faker.date.recent(),
-            done: true,
+            done,
             categoryId: category.id,
             userId,
         },
