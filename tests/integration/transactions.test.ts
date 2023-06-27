@@ -506,7 +506,6 @@ describe('UPDATE /transactions/:transactionId', () => {
         it('should respond with status 200 when there are valid transactionsId', async () => {
             const user = await createUser();
             const token = await generateValidToken(user);
-
             const transaction = await createTransaction(user.id, false, 'INPUT');
 
             const response = await server
