@@ -512,7 +512,6 @@ describe('UPDATE /transactions/:transactionId', () => {
                 .put(`/transactions/${transaction.id}`)
                 .set('Authorization', `Bearer ${token}`);
 
-
             expect(response.status).toEqual(httpStatus.OK);
 
         });
